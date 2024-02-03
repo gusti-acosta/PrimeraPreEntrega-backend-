@@ -1,19 +1,19 @@
-const express = requiere('express');
-import { ProductManager } from "./productManager";
-import { ProductsRouter } from "./routes/products.router.js";
+import express from 'express';
+import { ProductManager } from "./productManager.js";
+import { CartManager } from './cartManager.js';
+import { productsRouter } from "./routes/products.router.js";
+import { cartsRouter} from './routes/cartsRouter.js';
 
-
-PORT = 8080;
+const PORT = 8080;
 
 const app = express();
 
+export const productManager = new ProductManager();
+export const  cartManager = new CartManager;
 
-export const productManager = new ProductManager;
-
-
-app.use('/products', productsRouter )
-app.use(express.json())
-
-app.lisyen(PORT, (req, res) => {
+app.use(express.json());
+app.use('/api/products', productsRouter);
+app.use('/api/carts', cartsRouter)
+app.listen(PORT, () => {
     console.log(`Servidor escuchando el puerto ${PORT}`);
-})
+});

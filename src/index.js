@@ -1,20 +1,15 @@
-const { ProductManager } = require("./productManager"); 
+// import express from 'express';
+// import { ProductManager } from "./productManager.js";
+// import { productsRouter } from "./routes/products.router.js";
 
-const manager = new ProductManager('./products.json');
-async function cargarArchivos() {
-    try {
-        await manager.addProduct('ps5', 'xcdvxscscjkajkcajkjkdjkdjahjkdj', 599.99, 'image.jpg', 'FP1', 10);
-        await manager.addProduct('ps6', 'jdashjkdajhksdhjksasdjhkjkah', 22229.99, 'imagen.jpg', 'SP2', 20);
+// PORT = 8080;
 
-        const products = await manager.getAllProducts();
-        console.log(products);
-        
-        await new Promise(resolve => setTimeout(resolve, 10000));
+// const app = express();
 
-        await manager.deleteProduct(1);
-    } catch (error) {
-        console.error('Error al cargar archivos:', error.message);
-    }
-}
+// export const productManager = new ProductManager;
 
-cargarArchivos();
+// app.use(express.json())
+// app.use('/api/products', productsRouter )
+// app.lisyen(PORT, (req, res) => {
+//     console.log(`Servidor escuchando el puerto ${PORT}`);
+// })

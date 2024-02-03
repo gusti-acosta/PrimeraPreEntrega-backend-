@@ -1,0 +1,12 @@
+[
+  {
+    "id": 2,
+    "title": "Producto Ejemplo 2",
+    "description": "Esta es una descripción de ejemplo para el producto.",
+    "price": 70,
+    "thumbnail": "https://ejemplo.com/thumbnail.jpg",
+    "code": "ABC234",
+    "stock": 533,
+    "category": "messi"
+  }
+]
