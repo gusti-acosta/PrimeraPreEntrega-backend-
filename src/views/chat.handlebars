@@ -1,0 +1,47 @@
+<h1>Welcome to the chat</h1>
+
+<div>
+    <h1 id="userNameTitle"></h1>
+    <input type="text" id="messageInput">
+    <p id="messagesLog"></p>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    let myUserName = '';
+    let socket = io();
+
+    const userNameTitle = document.getElementById("userNameTitle")
+    const messageInput = document.getElementById("messageInput")
+    const messagesLog = document.getElementById("messagesLog")
+
+
+
+    socket.on('chat messages',({messages})=>{
+        messagesLog.innerHTML= ''
+        messages.forEach(m => {
+            messagesLog.innerHTML+= `${m.user}: ${m.message}<br/>`
+        });
+    })
+
+    messageInput.addEventListener('keyup',(e)=>{
+        if(e.key == 'Enter'){
+            socket.emit('new message', {
+                user: myUserName, 
+                message: e.target.value 
+            })
+            e.target.value = ''
+        }
+    })
+
+    Swal.fire({
+        title: 'Login',
+        text: 'Please enter your username to continue.',
+        input: 'email',
+        allowOutsideClick: false
+    }).then((result)=>{
+        myUserName = result.value;
+        userNameTitle.innerHTML = myUserName;
+    })
+</script>

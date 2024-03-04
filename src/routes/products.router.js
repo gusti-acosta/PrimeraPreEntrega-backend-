@@ -1,22 +1,27 @@
-import { Router } from 'express';
-import { productManager } from '../app.js';
+const { Router } = require("express");
+const productManager = require("../dao/dbManagers/productsManager");
+
+const manager = new productManager();
 
 const productsRouter = Router();
 
 productsRouter.get('/', async (req, res) => {
     const { limit } = req.query;
     try {
-        const products = productManager.getProducts(limit);
+        const products = await manager.getProducts(limit);
         res.json(products);
+
     } catch (error) {
         console.log("Error getting products: ", error);
         res.status(500).json({ error: "Internal Server Error" });
+        
     }
 });
+
 productsRouter.get('/:id', async (req, res) => {
     const { id } = req.params;
     try {
-        const product = productManager.getProductById(id);
+        const product = await manager.getProductById(id);
         if (product) {
             res.json(product);
         } else {
@@ -30,19 +35,23 @@ productsRouter.get('/:id', async (req, res) => {
 
 productsRouter.post('/', async (req, res) => {
     try {
-        const { title, description, price, thumbnail, code, stock, status = true, category } = req.body;
-        productManager.addProduct(title, description, price, thumbnail, code, stock, status, category);
+        const productData = req.body;
+        await manager.addProduct(productData);
+        const products = await manager.getProducts();
+        req.io.emit('list updated', { products });
+        console.log(products)
         res.json({ message: "Product added successfully" });
     } catch (error) {
         console.log("Error adding product: ", error);
         res.status(400).json({ error: "Invalid data" });
     }
 });
+
 productsRouter.put('/:id', async (req, res) => {
     const { id } = req.params;
     try {
         const { title, description, price, thumbnail, code, stock, status, category } = req.body;
-        const response = await productManager.updateProduct(id, { title, description, price, thumbnail, code, stock, status, category });
+        const response = await manager.updateProduct(id, { title, description, price, thumbnail, code, stock, status, category });
         if (response) {
             res.json({ message: "Product updated successfully" });
         } else {
@@ -57,7 +66,7 @@ productsRouter.put('/:id', async (req, res) => {
 productsRouter.delete('/:id', async (req, res) => {
     const { id } = req.params;
     try {
-        await productManager.deleteProduct(id);
+        await manager.deleteProduct(id);
         res.json({ message: "Product deleted successfully" });
     } catch (error) {
         console.log("Error deleting product: ", error);
@@ -65,4 +74,4 @@ productsRouter.delete('/:id', async (req, res) => {
     }
 });
 
-export { productsRouter };
+module.exports = productsRouter;
