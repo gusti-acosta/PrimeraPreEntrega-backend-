@@ -31,17 +31,16 @@ class ProductManager {
         }
     }
 
-    async getProducts(limit) {
+    async getProducts(filter, limit, skip, sortOption) {
         try {
-            let products;
-            if (limit === undefined) {
-                products = await productModel.find().lean();
-            } else {
-                products = await productModel.find().limit(parseInt(limit)).lean();
+            let query = productModel.find(filter).limit(limit).skip(skip);
+            if (sortOption) {
+                query = query.sort(sortOption);
             }
+            const products = await query.lean();
             return products;
         } catch (error) {
-            console.error('Error al obtener productos:', error.message);
+            console.error('Error getting products:', error.message);
             return [];
         }
     }
@@ -90,6 +89,15 @@ class ProductManager {
         } catch (error) {
             console.error('Error al eliminar producto:', error.message);
             return null;
+        }
+    }
+    async countProducts(filter) {
+        try {
+            const count = await productModel.countDocuments(filter);
+            return count;
+        } catch (error) {
+            console.error('Error counting products:', error.message);
+            return 0;
         }
     }
 }

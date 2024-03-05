@@ -45,6 +45,16 @@ cartsRouter.post('/:cid/products/:pid', async (req, res) => {
         res.status(500).send('Error al agregar producto al carrito.');
     }
 });
+cartsRouter.delete('/:cid/products/:pid', async (req, res) => {
+    const { cid, pid } = req.params;
+    try {
+        await cartManager.removeProductFromCart(cid, pid);
+        res.send('Producto eliminado del carrito correctamente.');
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error al eliminar producto del carrito.');
+    }
+});
 
 module.exports = cartsRouter;
 
