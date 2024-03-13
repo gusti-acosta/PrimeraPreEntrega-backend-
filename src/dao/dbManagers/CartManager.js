@@ -28,16 +28,21 @@ class CartManager {
 
     async newCart() {
         try {
-            const newCart = await cartModel.create({ products: [] });
+            const newCart = await cartModel.create({ products: [] , quantity: []});
             return newCart;
         } catch (error) {
             console.error('Error al crear nuevo carrito:', error.message);
             return null;
         }
     }
+    
 
     async addProductToCart(cartId, productId, quantity) {
         try {
+            if (!quantity) {
+                quantity = 1;
+            }
+    
             const cart = await cartModel.findById(cartId);
             if (cart) {
                 const existingProductIndex = cart.products.findIndex(p => p.product === productId);
@@ -57,6 +62,8 @@ class CartManager {
             return null;
         }
     }
+    
+    
     async removeProductFromCart(cartId, productId) {
         try {
             const cart = await cartModel.findById(cartId);
@@ -72,7 +79,43 @@ class CartManager {
             return null;
         }
     }
-    
+    async updateProductQuantity(cartId, productId, newQuantity) {
+        try {
+            const cart = await cartModel.findById(cartId);
+            if (cart) {
+                const existingProduct = cart.products.find(p => p.product === productId);
+                if (existingProduct) {
+                    existingProduct.quantity = newQuantity;
+                    await cart.save();
+                    return { message: 'Se actualizó la cantidad del producto en el carrito.' };
+                } else {
+                    return { message: 'El producto no está en el carrito.' };
+                }
+            } else {
+                console.log("No se encontró el carrito");
+                return null;
+            }
+        } catch (error) {
+            console.error('Error al actualizar la cantidad del producto en el carrito:', error.message);
+            return null;
+        }
+    } 
+    async removeAllProductsFromCart(cartId) {
+        try {
+            const cart = await cartModel.findById(cartId);
+            if (cart) {
+                cart.products = [];
+                await cart.save();
+                return { message: 'Todos los productos fueron eliminados del carrito.' };
+            } else {
+                console.log("No se encontró el carrito");
+                return null;
+            }
+        } catch (error) {
+            console.error('Error al eliminar todos los productos del carrito:', error.message);
+            return null;
+        }
+    }   
 }
 
 

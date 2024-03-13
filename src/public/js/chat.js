@@ -36,11 +36,7 @@ Swal.fire({
     text: 'Please enter your username to continue.',
     input: 'email',
     allowOutsideClick: false
-    // inputValidator: (value)=>{
-    //     if(!value){
-    //         return 'We need a username to continue.'
-    //     }
-    // }
+
 }).then((result)=>{
     myUserName = result.value;
     userNameTitle.innerHTML = myUserName;

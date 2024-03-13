@@ -72,4 +72,5 @@ app.use(express.static('public'));
 // Rutas
 app.use('/api/products', productsRouter);
 app.use('/api/carts', cartsRouter);
+app.use('/products', productsRouter);
 app.use('/', viewsRouter);
